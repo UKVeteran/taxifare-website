@@ -1,6 +1,4 @@
 import streamlit as st
-import streamlit_folium as stf
-import folium
 
 # Set up the Streamlit app title
 st.title("TaxiFareModel")
