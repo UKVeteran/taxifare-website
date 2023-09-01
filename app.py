@@ -1,7 +1,7 @@
 import streamlit as st
 
 # Set up the Streamlit app title
-st.title("TaxiFareModel")
+st.title("Taxi Fare Model")
 
 # Ask the user for input parameters
 st.sidebar.header("Input Parameters")
