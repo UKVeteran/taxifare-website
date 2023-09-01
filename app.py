@@ -1,5 +1,9 @@
 import streamlit as st
 
+
+
+
+
 # Set up the Streamlit app title
 st.title("Taxi Fare Model")
 
@@ -16,6 +20,12 @@ dropoff_latitude = st.sidebar.number_input("Dropoff Latitude", min_value=-90.0, 
 
 # Input for passenger count
 passenger_count = st.sidebar.number_input("Passenger Count", min_value=1, value=1)
+
+
+
+
+
+
 
 if st.sidebar.button("Calculate Fare Prediction"):
     # You can add the code here to calculate the prediction without making an API call
