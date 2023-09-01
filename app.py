@@ -1,38 +1,34 @@
 import streamlit as st
+import requests
+import pandas as pd
+from datetime import datetime  # Import datetime directly
 
+with st.form(key='params_for_api'):
 
+    pickup_date = st.date_input('pickup datetime', value=datetime(2012, 10, 6, 12, 10, 20))
+    pickup_time = st.time_input('pickup datetime', value=datetime(2012, 10, 6, 12, 10, 20))
+    pickup_datetime = f'{pickup_date} {pickup_time}'
+    pickup_longitude = st.number_input('pickup longitude', value=40.7614327)
+    pickup_latitude = st.number_input('pickup latitude', value=-73.9798156)
+    dropoff_longitude = st.number_input('dropoff longitude', value=40.6413111)
+    dropoff_latitude = st.number_input('dropoff latitude', value=-73.7803331)
+    passenger_count = st.number_input('passenger_count', min_value=1, max_value=8, step=1, value=1)
 
+    st.form_submit_button('Make prediction')
 
+params = dict(
+    pickup_datetime=pickup_datetime,
+    pickup_longitude=pickup_longitude,
+    pickup_latitude=pickup_latitude,
+    dropoff_longitude=dropoff_longitude,
+    dropoff_latitude=dropoff_latitude,
+    passenger_count=passenger_count)
 
-# Set up the Streamlit app title
-st.title("Taxi Fare Model")
+wagon_cab_api_url = 'https://taxifare.lewagon.ai/predict'
+response = requests.get(wagon_cab_api_url, params=params)
 
-# Ask the user for input parameters
-st.sidebar.header("Input Parameters")
+prediction = response.json()
 
-# Input for pickup longitude and latitude
-pickup_longitude = st.sidebar.number_input("Pickup Longitude", min_value=-180.0, max_value=180.0, step=0.001, value=0.0)
-pickup_latitude = st.sidebar.number_input("Pickup Latitude", min_value=-90.0, max_value=90.0, step=0.001, value=0.0)
+pred = prediction['fare']
 
-# Input for dropoff longitude and latitude
-dropoff_longitude = st.sidebar.number_input("Dropoff Longitude", min_value=-180.0, max_value=180.0, step=0.001, value=0.0)
-dropoff_latitude = st.sidebar.number_input("Dropoff Latitude", min_value=-90.0, max_value=90.0, step=0.001, value=0.0)
-
-# Input for passenger count
-passenger_count = st.sidebar.number_input("Passenger Count", min_value=1, value=1)
-
-
-
-
-
-
-
-if st.sidebar.button("Calculate Fare Prediction"):
-    # You can add the code here to calculate the prediction without making an API call
-    # Make sure to validate user inputs and perform the prediction
-    # For demonstration purposes, let's calculate a simple prediction based on user inputs
-    base_fare = 5.0
-    fare_per_mile = 2.0
-    prediction = base_fare + fare_per_mile * pickup_latitude
-
-    st.sidebar.success(f"The estimated fare is ${prediction:.2f}")
+st.header(f'Fare amount: ${round(pred, 2)}')
